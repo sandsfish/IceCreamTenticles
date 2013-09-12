@@ -3,21 +3,25 @@ import de.looksgood.ani.*;
 int rectSize = 50;
 int originalRectSize = rectSize;
 int maxRectSize = 100;
+int currentSize = 50;
 int noiseScale = 20;
+float offsetX, offsetY;
 
 void setup()
 {
   size(700, 394, OPENGL);
   Ani.init(this);
+  offsetX = 0;
+  offsetY = 0;
 }
 
 void draw()
 {
-  translate(noise(frameCount, frameCount) * noiseScale, noise(frameCount, frameCount) * noiseScale);
+  translate(noise(frameCount, frameCount) * noiseScale + offsetX, noise(frameCount, frameCount) * noiseScale + offsetY);
   pushMatrix();
      rotate(radians(frameCount % 360));
      rect(0, 0, rectSize, rectSize);
-  popMatrix(); 
+  popMatrix();
 }
 
 void keyPressed()
@@ -33,11 +37,14 @@ void mouseMoved()
 void doSomething()
 {
   println("do something");
-  Ani.to(this, .5, "rectSize", maxRectSize);
-  Ani.to(this, .5, "rectSize", originalRectSize);
+  currentSize = (maxRectSize == currentSize) ? originalRectSize : maxRectSize;
+  Ani.to(this, 2.0, "rectSize", currentSize);
+  // Ani.to(this, .5, "rectSize", originalRectSize);
 }
 
 void changeSomething(float x, float y)
 {
   println(x + ", " + y);
+  offsetX = width - (x * width);
+  offsetY = height - (y * height);
 }
